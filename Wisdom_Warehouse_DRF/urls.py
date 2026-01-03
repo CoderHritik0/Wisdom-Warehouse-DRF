@@ -16,16 +16,26 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
-from api.views import UserCreateView
+from django.urls import path, include
+from api.views import UserCreateView, UserUpdateView, RequestPasswordReset, ResetPasswordConfirmView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/register/", UserCreateView.as_view(), name="user_create"),
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api-auth/", include("rest_framework.urls")),
-    path("api/", include("api.urls")),
+  path("admin/", admin.site.urls),
+  path("register/", UserCreateView.as_view(), name="user_create"),
+  path("user/update/", UserUpdateView.as_view(), name="user_update"),
+  path('reset-password/', RequestPasswordReset.as_view(), name='reset-password'),
+  path('reset-password/<uidb64>/<token>/', ResetPasswordConfirmView.as_view(), name='reset-password-confirm'),
+
+  path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+  path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+  path("api-auth/", include("rest_framework.urls")),
+  path("api/", include("api.urls")),
+  path('silk/', include('silk.urls', namespace='silk')),
+  path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+  path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+  path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
