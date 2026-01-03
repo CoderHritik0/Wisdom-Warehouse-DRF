@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework import generics
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework import status
 from Wisdom_Warehouse_DRF import settings
 
@@ -14,6 +15,7 @@ from .serializers import (UserSerializer,
                           ResetPasswordEmailSerializer,
                           ResetPasswordSerializer)
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from .permissions import PinVerifiedPermission
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
@@ -51,13 +53,11 @@ class NoteListCreateView(generics.ListCreateAPIView):
 
 class HiddenNoteListView(generics.ListAPIView):
   serializer_class = NoteSerializer
-  permission_classes = [IsAuthenticated]
+  permission_classes = [IsAuthenticated, PinVerifiedPermission]
+  pagination_class = None
 
   def get_queryset(self):
-    if self.request.data.get('pin') == self.request.user.profile.pin:
-      return Note.objects.filter(user=self.request.user, is_hidden=True)
-    else:
-      raise ValueError("Invalid PIN provided.")
+    return Note.objects.filter(user=self.request.user, is_hidden=True)
 
 class NoteUpdateView(generics.UpdateAPIView):
   serializer_class = NoteSerializer
