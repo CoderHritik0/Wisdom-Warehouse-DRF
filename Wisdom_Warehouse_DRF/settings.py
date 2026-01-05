@@ -175,7 +175,7 @@ PASSWORD_RESET_BASE_URL = "http://localhost:8000/reset-password"
 CSRF_TRUSTED_ORIGINS =[
   'http://localhost:8000/',
   'http://127.0.0.1:8000/',
-  'https://wisdom-warehouse-drf.onrender.com/'
+  'https://wisdom-warehouse-drf.onrender.com'
 ]
 
 
