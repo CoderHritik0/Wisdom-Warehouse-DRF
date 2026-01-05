@@ -148,8 +148,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "production_static")
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / 'productionfiles'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -173,6 +174,7 @@ PASSWORD_RESET_BASE_URL = "http://localhost:8000/reset-password"
 
 CSRF_TRUSTED_ORIGINS =[
   'http://localhost:8000/',
+  'http://127.0.0.1:8000/',
   'https://wisdom-warehouse-drf.onrender.com/'
 ]
 
